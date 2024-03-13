@@ -1,7 +1,7 @@
 services:
   web-app:
     build:
-      context: ../music-library-service
+      context: ../music-library
     ports:
       - "8000:8000"
     volumes:

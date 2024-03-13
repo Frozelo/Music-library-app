@@ -27,3 +27,10 @@ def objects_exist(func):
         return queryset
 
     return wrapper
+
+
+def order_by_decorator(func):
+    def wrapper(obj, order_by=(), *args, **kwargs):
+        return func(obj, *args, **kwargs).order_by(*order_by)
+
+    return wrapper

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from core.services import filter_objects
 from src.music_app.models import Album, Track
 
-
+# TODO Think about optimized serializer
 class AlbumSerializer(serializers.ModelSerializer):
     artist = serializers.StringRelatedField()
     tracks = serializers.SerializerMethodField()

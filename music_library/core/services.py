@@ -1,10 +1,11 @@
 from core.decorators import only_objects_decorator, select_related_objects_decorator, \
-    prefetch_related_objects_decorator, objects_exist
+    prefetch_related_objects_decorator, objects_exist, order_by_decorator
 
 
 @select_related_objects_decorator
 @prefetch_related_objects_decorator
 @only_objects_decorator
+@order_by_decorator
 def all_objects(obj: callable):
     return obj.all()
 
