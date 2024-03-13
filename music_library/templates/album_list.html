@@ -1,0 +1,108 @@
+<!-- album_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Список альбомов{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Albums</h1>
+    <div class="row">
+        {% for album in albums %}
+        <div class="col-lg-4 col-md-6 mt-4">
+            <div class="card album-card">
+                <img src="{{ album.cover_image.url }}" class="card-img-top" alt="{{ album.title }} Cover">
+                <div class="card-body">
+                    <h5 class="card-title">{{ album.title }}</h5>
+                    <p class="card-text">Release Year: {{ album.release_year }}</p>
+                    <p class="card-text">Artist: {{ album.artist }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary view-album" data-toggle="modal" data-target="#albumModal" data-album="{{ album.id }}">Просмотр</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Модальное окно для отображения информации об альбоме -->
+<div class="modal fade" id="albumModal" tabindex="-1" aria-labelledby="albumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="albumModalLabel">Album Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="" id="albumCover" class="img-fluid" alt="Album Cover">
+                    </div>
+                    <div class="col-md-8 text-dark">
+                        <h2 id="albumTitle"></h2>
+                        <p id="albumReleaseYear"></p>
+                        <p id="albumArtist"></p>
+                        <p class="text-muted", id="albumBiography"></p>
+                        <!-- Добавляем треки -->
+                        <h3>Tracks</h3>
+                        <div id="albumTracks" class="row"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Подключение библиотеки Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<!-- Подключение jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.querySelectorAll('.view-album').forEach(button => {
+        button.addEventListener('click', function() {
+            console.log('Кнопка просмотра альбома нажата');
+            const albumId = this.getAttribute('data-album');
+            fetch(`/api/v1/albums/${albumId}/`)
+                .then(response => {
+                    console.log('Ответ от сервера получен');
+                    return response.json();
+                })
+                .then(album => {
+                    console.log('Данные альбома получены:', album);
+                    document.getElementById('albumTitle').textContent = album.title;
+                    document.getElementById('albumReleaseYear').textContent = `Release Year: ${album.release_year}`;
+                    document.getElementById('albumArtist').textContent = `Artist: ${album.artist}`;
+                    document.getElementById('albumBiography').textContent = album.biography ? `Biography: ${album.biography}` : '';
+                    document.getElementById('albumCover').src = album.cover_image;
+
+                    // Очистить предыдущие треки
+                    const albumTracksElement = document.getElementById('albumTracks');
+                    albumTracksElement.innerHTML = '';
+
+                    // Добавить треки альбома
+                    album.tracks.forEach(track => {
+                        const trackItem = document.createElement('div');
+                        trackItem.classList.add('col-md-6', 'mb-3');
+                        trackItem.innerHTML = `
+                            <div class="card track-card" style="background-color: #f8f9fa;">
+                                <div class="card-body text-dark">
+                                    <h5 class="card-title">${track.title}</h5>
+                                    <p class="card-text">Duration: ${track.duration}</p>
+                                    <p class="card-text">Artist(s): ${track.artist.join(', ')}</p>
+                                </div>
+                            </div>
+                        `;
+                        albumTracksElement.appendChild(trackItem);
+                    });
+
+                    $('#albumModal').modal('show');
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+/* styles.css */
+.modal-content {
+    color: #f0f0f0; /* серый цвет текста */
+    background-color: #212529; /* черный цвет фона */
+}
+
+.card.track-card {
+    margin-bottom: 20px;
+    background-color: #343a40; /* серый цвет карточки */
+    color: #f0f0f0; /* серый цвет текста */
+    width: 100%;
+}
+
+.card.track-card .card-title {
+    color: #f0f0f0; /* серый цвет текста */
+}
+
+.card.track-card .card-text {
+    color: #adb5bd; /* серый цвет текста */
+}

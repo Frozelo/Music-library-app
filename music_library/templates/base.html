@@ -1,0 +1,104 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Дополнительные стили */
+        body {
+            padding-top: 56px; /* Учитываем высоту навигационного меню */
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px; /* По умолчанию скрываем меню за левый край экрана */
+            bottom: 0;
+            z-index: 1000; /* Устанавливаем z-index поверх других элементов */
+            padding: 48px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+            overflow-y: auto; /* Добавляем скролл, если контент не помещается */
+            width: 250px; /* Фиксированная ширина сайдбара */
+            transition: left 0.3s; /* Анимация для скрытия/показа */
+        }
+
+        .sidebar.active {
+            left: 0; /* Показываем меню */
+        }
+
+        .sidebar-heading {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            padding: 0 20px;
+        }
+
+        .sidebar-menu {
+            padding-left: 20px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu li a {
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            color: #007bff;
+        }
+
+        .content {
+            padding: 20px;
+            transition: margin-left 0.3s; /* Анимация для скрытия/показа */
+        }
+
+        .content.active {
+            margin-left: 250px; /* Сдвигаем контент вправо, чтобы он был виден */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <button class="btn btn" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-heading">Меню</div>
+    <ul class="list-unstyled sidebar-menu">
+        <li><a href="#">Главная</a></li>
+        <li><a href="#">Альбомы</a></li>
+        <li><a href="#">Исполнители</a></li>
+        <li><a href="#">Жанры</a></li>
+    </ul>
+</nav>
+
+<!-- Content -->
+<div class="content" id="content">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script>
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('content').classList.toggle('active');
+    });
+</script>
+
+</body>
+</html>
