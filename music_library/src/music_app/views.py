@@ -12,7 +12,7 @@ def artist_list():
 def album_list(request):
     """Отображает список альбомов с учетом фильтров и сортировки."""
     artists = artist_list()
-    albums = Album.objects.all()
+    albums = all_objects(obj=Album.objects, select_related=('artist',))
 
     if request.method == 'GET':
         albums = apply_filters(request, albums)

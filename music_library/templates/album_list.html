@@ -10,7 +10,11 @@
         {% for album in albums %}
         <div class="col-lg-4 col-md-6 mt-4">
             <div class="card album-card">
-                <img src="{{ album.cover_image.url }}" class="card-img-top" alt="{{ album.title }} Cover">
+                {% if album.cover %}
+                    <img src="{{ album.cover_image.url }}" class="card-img-top" alt="{{ album.title }} Cover">
+                {% else %}
+                    <img src="https://via.placeholder.com/200x200" class="card-img-top" alt="{{ album.title }} Cover">
+                {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ album.title }}</h5>
                     <p class="card-text">Release Year: {{ album.release_year }}</p>

@@ -10,7 +10,7 @@ from core.services import get_objects, all_objects
 class AlbumDetailView(APIView):
     def get(self, request, album_id):
         try:
-            album = Album.objects.get(id=album_id)
+            album = Album.objects.select_related('artist').get(id=album_id)
             serializer = AlbumSerializer(album)
             return Response(serializer.data)
         except Album.DoesNotExist:
