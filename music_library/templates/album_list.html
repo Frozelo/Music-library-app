@@ -10,7 +10,7 @@
         {% for album in albums %}
         <div class="col-lg-4 col-md-6 mt-4">
             <div class="card album-card">
-                {% if album.cover %}
+                {% if album.cover_image %}
                     <img src="{{ album.cover_image.url }}" class="card-img-top" alt="{{ album.title }} Cover">
                 {% else %}
                     <img src="https://via.placeholder.com/200x200" class="card-img-top" alt="{{ album.title }} Cover">
