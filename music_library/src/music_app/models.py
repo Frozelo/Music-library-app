@@ -13,6 +13,7 @@ class Artist(models.Model):
     date_of_birth = models.DateField
     country = models.CharField(max_length=50)
     biography = models.TextField()
+    avatar = models.ImageField(upload_to='media/artists_avatar', blank=True, null=True)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True)
     artist_image = models.ImageField(upload_to='media/artist_images', blank=True, null=True)
 
