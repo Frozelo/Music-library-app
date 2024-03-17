@@ -5,17 +5,18 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from core.services import all_objects
-from .serializers import AlbumSerializer, ArtistSerializer
-from ...music_app.models import Album, Artist
+from .serializers import AlbumSerializer, ArtistSerializer, TrackSerializer
+from ...music_app.models import Album, Artist, Track
 
 
-class ArtistView(ListAPIView):
-    queryset = Artist.objects.all().select_related('genre')
-    serializer_class = ArtistSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['country', 'genre']
-
-
+class ArtistDetailView(APIView):
+    def get(self, request, artist_id):
+        try:
+            artist = Artist.objects.select_related('genre').get(id=artist_id)
+            serializer = ArtistSerializer(artist)
+            return Response(serializer.data)
+        except Artist.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class AlbumDetailView(APIView):
@@ -27,3 +28,11 @@ class AlbumDetailView(APIView):
         except Album.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class TrackDetailView(APIView):
+    def get(self, request, track_id):
+        try:
+            track = Track.objects.select_related('album').get(id=track_id)
+            serializer = TrackSerializer(track)
+            return Response(serializer.data)
+        except Track.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

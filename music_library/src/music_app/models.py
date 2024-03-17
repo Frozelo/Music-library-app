@@ -5,12 +5,12 @@ class Genre(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
 
 
 class Artist(models.Model):
     name = models.CharField(max_length=100)
-    date_of_birth = models.DateField
+    date_of_birth = models.DateField(auto_now_add=False, blank=True, null=True)
     country = models.CharField(max_length=50)
     biography = models.TextField()
     avatar = models.ImageField(upload_to='media/artists_avatar', blank=True, null=True)
@@ -18,7 +18,7 @@ class Artist(models.Model):
     artist_image = models.ImageField(upload_to='media/artist_images', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
 
 
 class Album(models.Model):
@@ -29,7 +29,7 @@ class Album(models.Model):
     cover_image = models.ImageField(upload_to='media/albums/covers', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.title}'
+        return self.title
 
 
 class Track(models.Model):
@@ -41,5 +41,4 @@ class Track(models.Model):
     cover_image = models.ImageField(upload_to='media/tracks/covers/', blank=True, null=True)
 
     def __str__(self):
-        artist_names = ', '.join([artist.name for artist in self.artist.all()])
-        return f'{self.title} - {artist_names}: {self.duration}'
+        return f'{self.title} - {", ".join([artist.name for artist in self.artist.all()])}: {self.duration}'

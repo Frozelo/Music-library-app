@@ -8,15 +8,25 @@ def apply_sorting(albums, sort_by):
     return albums.order_by(sorting_options.get(sort_by, 'id'))
 
 
-def apply_filters(request, albums):
-    """Применяет фильтры к списку альбомов на основе параметров из запроса."""
-    artist_id = request.GET.get('artist')
-    sort_by = request.GET.get('sort_by')
+FILTER_ACTIONS = {
+    'artist': lambda queryset, value: queryset.filter(artist_id=value),
+    'genre': lambda queryset, value: queryset.filter(genre_id=value),
+    'sort_by': apply_sorting,
+}
 
-    if artist_id:
-        albums = albums.filter(artist_id=artist_id)
 
-    if sort_by:
-        albums = apply_sorting(albums, sort_by)
+def apply_filters(request, queryset):
+    """Применяет фильтры к queryset на основе параметров из запроса."""
+    filters = {
+        'artist': request.GET.get('artist'),
+        'genre': request.GET.get('genre'),
+        'sort_by': request.GET.get('sort_by'),
+    }
 
-    return albums
+    filtered_queryset = queryset
+
+    for key, value in filters.items():
+        if value:
+            filtered_queryset = FILTER_ACTIONS[key](filtered_queryset, value)
+
+    return filtered_queryset

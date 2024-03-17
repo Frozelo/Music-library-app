@@ -12,11 +12,17 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class ArtistSerializer(serializers.ModelSerializer):
     genre = GenreSerializer()
+    albums = serializers.SerializerMethodField()
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'country', 'avatar', 'genre']
+        fields = ['id', 'name', 'country', 'artist_image', 'genre', 'albums']
 
+    def get_albums(self, instance):
+        albums = filter_objects(obj=Album.objects.filter(artist=instance),
+                                artist=instance,
+                                select_related=('artist',))
+        return AlbumSerializer(albums, many=True).data
 
 
 class AlbumSerializer(serializers.ModelSerializer):
@@ -30,7 +36,7 @@ class AlbumSerializer(serializers.ModelSerializer):
     def get_tracks(self, instance):
         tracks = filter_objects(obj=Track.objects.filter(album=instance),
                                 album=instance,
-                                prefetch_related=('artist',))
+                                select_related=('album',))
         return TrackSerializer(tracks, many=True).data
 
 
