@@ -14,6 +14,7 @@ class Artist(models.Model):
     country = models.CharField(max_length=50)
     biography = models.TextField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True)
+    artist_image = models.ImageField(upload_to='media/artist_images', blank=True, null=True)
 
     def __str__(self):
         return f'{self.name}'

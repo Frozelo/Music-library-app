@@ -6,6 +6,30 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Albums</h1>
+        <form id="filterForm" method="GET">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="artistSelect" class="form-label">Filter by Artist:</label>
+                <select class="form-select" id="artistSelect" name="artist">
+                    <option value="">All</option>
+                    {% for artist in artists %}
+                    <option value="{{ artist.id }}">{{ artist.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="sortSelect" class="form-label">Sort by:</label>
+                <select class="form-select" id="sortSelect" name="sort_by">
+                    <option value="">None</option>
+                    <option value="title">Title</option>
+                    <option value="release_year">Release Year</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+        </div>
+    </form>
     <div class="row">
         {% for album in albums %}
         <div class="col-lg-4 col-md-6 mt-4">

@@ -1,0 +1,47 @@
+<!-- artist_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Список артистов{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Artists</h1>
+    <form id="filterForm" method="GET">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="genreSelect" class="form-label">Filter by Genre:</label>
+                <select class="form-select" id="genreSelect" name="genre">
+                    <option value="">All</option>
+                    {% for genre in genres %}
+                    <option value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        {% for artist in artists %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mt-4">
+            <div class="card artist-card">
+                <div class="card-body text-center">
+                    {% if artist.artist_image %}
+                    <img src="{{ artist.artist_image.url }}" class="rounded-circle img-fluid mb-3"
+                         alt="{{ artist.name }} Avatar">
+                    {% else %}
+                    <div class="rounded-circle img-fluid mb-3"
+                         style="background-color: #ccc; width: 150px; height: 150px;"></div>
+                    {% endif %}
+                    <h5 class="card-title">{{ artist.name }}</h5>
+                    <p class="card-text">Country: {{ artist.country }}</p>
+                    <p class="card-text">Genre: {{ artist.genre }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock %}
