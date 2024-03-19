@@ -35,7 +35,7 @@ class Album(models.Model):
 
 class AlbumUserRelationship(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='usersalbum', blank=True, null=True)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='user', blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
 
     class Meta:
@@ -56,7 +56,7 @@ class Track(models.Model):
 
 class TrackUserRelationship(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name='userstrack', blank=True, null=True)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name='user', blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
 
     class Meta:

@@ -13,13 +13,13 @@ from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, Tra
 
 class AlbumListView(ReadOnlyModelViewSet):
     queryset = (Album.objects.select_related('artist').prefetch_related('tracks__artist').
-                annotate(total_likes=Count('usersalbum')))
+                annotate(total_likes=Count('user')))
     serializer_class = AlbumSerializer
 
 
 class TrackListView(ReadOnlyModelViewSet):
     queryset = (Track.objects.prefetch_related('artist').
-                annotate(total_likes=Count('userstrack')).
+                annotate(total_likes=Count('user')).
                 defer('album'))
     serializer_class = TrackSerializer
 
