@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.services import filter_objects
-from src.music_app.models import Album, Track, Artist, Genre
+from src.music_app.models import Album, Track, Artist, Genre, AlbumUserRelationship, TrackUserRelationship
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -12,37 +12,35 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class ArtistSerializer(serializers.ModelSerializer):
     genre = GenreSerializer()
-    albums = serializers.SerializerMethodField()
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'country', 'artist_image', 'genre', 'albums']
-
-    def get_albums(self, instance):
-        albums = filter_objects(obj=Album.objects.filter(artist=instance),
-                                artist=instance,
-                                select_related=('artist',))
-        return AlbumSerializer(albums, many=True).data
+        fields = ['id', 'name', 'country', 'artist_image', 'genre', ]
 
 
-class AlbumSerializer(serializers.ModelSerializer):
-    artist = serializers.StringRelatedField()
-    tracks = serializers.SerializerMethodField()
+class TrackLikesSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
 
     class Meta:
-        model = Album
-        fields = ['id', 'title', 'release_year', 'artist', 'biography', 'cover_image', 'tracks']
-
-    def get_tracks(self, instance):
-        tracks = filter_objects(obj=Track.objects.filter(album=instance),
-                                album=instance,
-                                select_related=('album',))
-        return TrackSerializer(tracks, many=True).data
+        model = TrackUserRelationship
+        fields = ['id', 'user', 'created_at']
 
 
 class TrackSerializer(serializers.ModelSerializer):
     artist = serializers.StringRelatedField(many=True)
+    total_likes = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Track
-        fields = ['id', 'title', 'duration', 'artist', 'audio_file', 'cover_image']
+        fields = ['id', 'title', 'duration', 'artist', 'audio_file', 'cover_image', 'total_likes', ]
+
+
+class AlbumSerializer(serializers.ModelSerializer):
+    artist = serializers.StringRelatedField()
+    tracks = TrackSerializer(many=True)
+    total_likes = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Album
+        fields = ['id', 'title', 'release_year', 'artist', 'biography', 'cover_image', 'tracks',
+                  'total_likes']

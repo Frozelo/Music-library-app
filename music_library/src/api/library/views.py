@@ -1,38 +1,49 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.db.models import Count
 from rest_framework import status
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from core.services import all_objects
+from .abstrack_api_views import AbstractLikeView
 from .serializers import AlbumSerializer, ArtistSerializer, TrackSerializer
-from ...music_app.models import Album, Artist, Track
+from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, TrackUserRelationship
 
 
-class ArtistDetailView(APIView):
-    def get(self, request, artist_id):
-        try:
-            artist = Artist.objects.select_related('genre').get(id=artist_id)
-            serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
-        except Artist.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class AlbumListView(ReadOnlyModelViewSet):
+    queryset = (Album.objects.select_related('artist').prefetch_related('tracks__artist').
+                annotate(total_likes=Count('usersalbum')))
+    serializer_class = AlbumSerializer
 
 
-class AlbumDetailView(APIView):
-    def get(self, request, album_id):
-        try:
-            album = Album.objects.select_related('artist').get(id=album_id)
-            serializer = AlbumSerializer(album)
-            return Response(serializer.data)
-        except Album.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class TrackListView(ReadOnlyModelViewSet):
+    queryset = (Track.objects.prefetch_related('artist').
+                annotate(total_likes=Count('userstrack')).
+                defer('album'))
+    serializer_class = TrackSerializer
 
-class TrackDetailView(APIView):
-    def get(self, request, track_id):
-        try:
-            track = Track.objects.select_related('album').get(id=track_id)
-            serializer = TrackSerializer(track)
-            return Response(serializer.data)
-        except Track.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class ArtistListView(ReadOnlyModelViewSet):
+    queryset = Artist.objects.select_related('genre')
+    serializer_class = ArtistSerializer
+
+
+class AlbumLikeView(AbstractLikeView):
+    like_type = 'album'
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        object_id = kwargs.get('id')
+        album = Album.objects.get(pk=object_id)
+        return self.set_like(user, album, AlbumUserRelationship)
+
+
+class TrackLikeView(AbstractLikeView):
+    like_type = 'track'
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        object_id = kwargs.get('id')
+        track = Track.objects.get(pk=object_id)
+        return self.set_like(user, track, TrackUserRelationship)

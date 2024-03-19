@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -32,13 +33,31 @@ class Album(models.Model):
         return self.title
 
 
+class AlbumUserRelationship(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='usersalbum', blank=True, null=True)
+    created_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'album')
+
+
 class Track(models.Model):
     title = models.CharField(max_length=100)
     duration = models.DurationField()
     artist = models.ManyToManyField(Artist)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, blank=True, null=True)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='tracks', blank=True, null=True)
     audio_file = models.FileField(upload_to='media/tracks/songs/', blank=True, null=True)
     cover_image = models.ImageField(upload_to='media/tracks/covers/', blank=True, null=True)
 
     def __str__(self):
         return f'{self.title} - {", ".join([artist.name for artist in self.artist.all()])}: {self.duration}'
+
+
+class TrackUserRelationship(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name='userstrack', blank=True, null=True)
+    created_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'track')

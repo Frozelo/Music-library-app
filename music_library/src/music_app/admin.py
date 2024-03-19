@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Artist, Album, Track, Genre
+from .models import Artist, Album, Track, Genre, AlbumUserRelationship
 
 
 @admin.register(Artist)
@@ -33,3 +33,9 @@ class TrackAdmin(admin.ModelAdmin):
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('name',)
+
+@admin.register(AlbumUserRelationship)
+class AlbumUserRelationshipAdmin(admin.ModelAdmin):
+    list_display = ('user', 'album', 'created_at')
+    list_filter = ('album__artist', 'album__release_year')
+    search_fields = ('user__username', 'album__title')
