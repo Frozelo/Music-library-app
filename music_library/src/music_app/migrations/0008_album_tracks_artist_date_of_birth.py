@@ -15,9 +15,5 @@ class Migration(migrations.Migration):
             name='tracks',
             field=models.ManyToManyField(blank=True, related_name='albums', to='music_app.track'),
         ),
-        migrations.AddField(
-            model_name='artist',
-            name='date_of_birth',
-            field=models.DateField(blank=True, null=True),
-        ),
+
     ]

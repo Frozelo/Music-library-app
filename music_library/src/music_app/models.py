@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -34,7 +35,7 @@ class Album(models.Model):
 
 
 class AlbumUserRelationship(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='user', blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
 
@@ -55,7 +56,7 @@ class Track(models.Model):
 
 
 class TrackUserRelationship(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name='user', blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
 
