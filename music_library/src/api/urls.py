@@ -12,7 +12,8 @@ router.register(r'albums', AlbumListView)
 router.register(r'tracks', TrackListView)
 
 urlpatterns = [
-    path('', include('src.api.library.urls'))
+    path('', include('src.api.library.urls')),
+    path('', include('src.api.user.urls')),
 ]
 
 urlpatterns += router.urls

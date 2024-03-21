@@ -1,6 +1,9 @@
 from django.db.models import Count
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -34,8 +37,8 @@ class AlbumLikeView(AbstractLikeView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        object_id = kwargs.get('id')
-        album = Album.objects.get(pk=object_id)
+        album_id = kwargs.get('id')
+        album = get_object_or_404(Album, pk=album_id)
         return self.set_like(user, album, AlbumUserRelationship)
 
 
@@ -44,6 +47,6 @@ class TrackLikeView(AbstractLikeView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        object_id = kwargs.get('id')
-        track = Track.objects.get(pk=object_id)
+        track_id = self.kwargs.get('id', None)
+        track = get_object_or_404(Track, pk=track_id)
         return self.set_like(user, track, TrackUserRelationship)

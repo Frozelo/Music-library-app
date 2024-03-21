@@ -1,10 +1,12 @@
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
 class AbstractLikeView(APIView):
     like_type = None
+    permission_classes = [IsAuthenticated]
 
     def set_like(self, user, obj, relationship_model):
         like_instance, created = relationship_model.objects.get_or_create(user=user, **{self.like_type: obj})
