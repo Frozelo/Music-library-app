@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 
+
 class Genre(models.Model):
     name = models.CharField(max_length=50)
 
@@ -13,9 +14,10 @@ class Artist(models.Model):
     date_of_birth = models.DateField(auto_now_add=False, blank=True, null=True)
     country = models.CharField(max_length=50)
     biography = models.TextField()
-    avatar = models.ImageField(upload_to='media/artists_avatar', blank=True, null=True)
+    avatar_image = models.URLField(max_length=200, blank=True, null=True)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True)
-    artist_image = models.ImageField(upload_to='media/artist_images', blank=True, null=True)
+    itunes_id = models.IntegerField(unique=True, null=True, blank=True)
+
 
     def __str__(self):
         return self.name

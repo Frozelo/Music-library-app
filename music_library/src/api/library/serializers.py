@@ -15,7 +15,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'country', 'artist_image', 'genre', ]
+        fields = ['id', 'name', 'country', 'avatar_image', 'genre', ]
 
 
 class TrackLikesSerializer(serializers.ModelSerializer):
