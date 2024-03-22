@@ -25,10 +25,10 @@ class Artist(models.Model):
 
 class Album(models.Model):
     title = models.CharField(max_length=100)
-    release_year = models.IntegerField()
+    release_year = models.IntegerField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     biography = models.TextField(blank=True, null=True)
-    cover_image = models.ImageField(upload_to='media/albums/covers', blank=True, null=True)
+    cover_image = models.URLField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.title

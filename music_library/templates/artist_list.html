@@ -27,8 +27,8 @@
         <div class="col-lg-3 col-md-4 col-sm-6 mt-4">
             <div class="card artist-card">
                 <div class="card-body text-center">
-                    {% if artist.artist_image %}
-                    <img src="{{ artist.artist_image.url }}" class="rounded-circle img-fluid mb-3"
+                    {% if artist.avatar_image %}
+                    <img src="{{ artist.avatar_image }}" class="rounded-circle img-fluid mb-3"
                          alt="{{ artist.name }} Avatar">
                     {% else %}
                     <div class="rounded-circle img-fluid mb-3"
