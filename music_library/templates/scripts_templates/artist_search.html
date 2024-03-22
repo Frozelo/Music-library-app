@@ -1,30 +1,17 @@
+<!-- artist_search.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Album Search and Save</title>
+    <title>Artist Search and Save</title>
 </head>
 <body>
-    <h1>Search and Save an Album</h1>
-    <form action="{% url 'save_album' %}" method="post">
-        {% csrf_token %}
+    <h1>Search and Save an Artist</h1>
+    <form method="post">{% csrf_token %}
         <label for="artist_name">Artist Name:</label>
-        <select id="artist_name" name="artist_name" required>
-            <option value="">--Select an Artist--</option>
-            <!-- Итерация через список артистов и создание option для каждого из них -->
-            {% for artist in artist_list %}
-            <option value="{{ artist.name }}">{{ artist.name }}</option>
-            {% endfor %}
-        </select><br>
-
-        <label for="album_name">Album Name:</label>
-        <input type="text" id="album_name" name="album_name" required><br>
-
-        <button type="submit">Search and Save Album</button>
+        <input type="text" id="artist_name" name="artist_name" required>
+        <button type="submit">Save</button>
     </form>
-
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
 </body>
 </html>

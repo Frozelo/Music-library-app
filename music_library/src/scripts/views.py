@@ -9,6 +9,7 @@ from src.music_app.services.core_service import get_artist_list
 from src.scripts.itunes_api_script import save_artist_to_db, fetch_artist_info_from_last_fm, \
     fetch_album_info_from_last_fm, save_album_to_db
 
+
 # TODO refactor this code, decompose functionality
 @method_decorator(csrf_protect, name='dispatch')
 class ArtistSearchView(View):

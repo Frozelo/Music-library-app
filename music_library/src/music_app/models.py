@@ -45,7 +45,7 @@ class AlbumUserRelationship(models.Model):
 
 class Track(models.Model):
     title = models.CharField(max_length=100)
-    duration = models.DurationField()
+    duration = models.DurationField(blank=True, null=True)
     artist = models.ManyToManyField(Artist)
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='tracks', blank=True, null=True)
     audio_file = models.FileField(upload_to='media/tracks/songs/', blank=True, null=True)
