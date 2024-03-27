@@ -1,10 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block content %}
+
+<div class="container my-5 artist-detail-page">
+    <!-- Header с инфо об артисте и его изображением -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-lg-4 col-md-5 text-center">
+            <img id="artist-image" class="img-thumbnail rounded-circle mb-3" src="" alt="Avatar of Artist" onerror="this.onerror=null; this.src='{% static 'images/default-avatar.png' %}'" style="width: 250px; height: 250px; object-fit: cover;">
+        </div>
+        <div class="col-lg-8 col-md-7">
+            <h1 id="artist-name" class="display-4 mb-2"></h1>
+            <p id="artist-genre" class="lead font-italic mb-2"></p>
+            <p id="artist-country" class="mb-2"></p>
+            <hr>
+            <p id="artist-biography" class="mt-2 text-justify"></p>
+        </div>
+    </div>
+
+    <!-- Список альбомов с карточками в стиле 'cards' -->
+    <h2 class="mb-4">Альбомы</h2>
+    <div id="artist-albums" class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Альбомы артиста будут вставлены здесь -->
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+function fetchArtistDetails(artistId) {
+    fetch(`/api/v1/artists/${artistId}/`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        document.getElementById('artist-image').src = data.avatar_image || '{% static 'images/default-artist.png' %}';
+        document.getElementById('artist-name').textContent = data.name;
+        document.getElementById('artist-genre').textContent = data.genre ? data.genre.name : 'Жанр не указан';
+        document.getElementById('artist-country').textContent = data.country || 'Страна не указана';
+        document.getElementById('artist-biography').textContent = data.biography || 'Биография не указана';
+
+        let albumsHtml = '';
+        data.albums.forEach(album => {
+            albumsHtml += `
+                <div class="col mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="${album.cover_image}" class="card-img-top" alt="${album.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${album.title}</h5>
+                            <p class="card-text">Год выпуска: ${album.release_year}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('artist-albums').innerHTML = albumsHtml;
+    })
+    .catch(err => {
+        console.error('Ошибка загрузки информации об артисте: ', err);
+        document.getElementById('error-message').classList.remove('d-none');
+    });
+}
+
+// Вызов fetchArtistDetails когда страница загружена
+document.addEventListener('DOMContentLoaded', function () {
+    const artistId = "{{ artist_id }}";
+    if (artistId) {
+        fetchArtistDetails(artistId);
+    }
+});
+</script>
+{% endblock %}

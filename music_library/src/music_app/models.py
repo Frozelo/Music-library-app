@@ -26,7 +26,7 @@ class Artist(models.Model):
 class Album(models.Model):
     title = models.CharField(max_length=100)
     release_year = models.IntegerField(blank=True, null=True)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="albums")
     biography = models.TextField(blank=True, null=True)
     cover_image = models.URLField(max_length=200, blank=True, null=True)
 

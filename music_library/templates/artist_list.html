@@ -25,20 +25,22 @@
     <div class="row">
         {% for artist in artists %}
         <div class="col-lg-3 col-md-4 col-sm-6 mt-4">
-            <div class="card artist-card">
-                <div class="card-body text-center">
-                    {% if artist.avatar_image %}
-                    <img src="{{ artist.avatar_image }}" class="rounded-circle img-fluid mb-3"
-                         alt="{{ artist.name }} Avatar">
-                    {% else %}
-                    <div class="rounded-circle img-fluid mb-3"
-                         style="background-color: #ccc; width: 150px; height: 150px;"></div>
-                    {% endif %}
-                    <h5 class="card-title">{{ artist.name }}</h5>
-                    <p class="card-text">Country: {{ artist.country }}</p>
-                    <p class="card-text">Genre: {{ artist.genre }}</p>
+            <a href="{% url 'detail_artist_view' artist.id %}" class="card-link">
+                <div class="card artist-card">
+                    <div class="card-body text-center">
+                        {% if artist.avatar_image %}
+                        <img src="{{ artist.avatar_image }}" class="rounded-circle img-fluid mb-3"
+                             alt="{{ artist.name }} Avatar">
+                        {% else %}
+                        <div class="rounded-circle img-fluid mb-3"
+                             style="background-color: #ccc; width: 150px; height: 150px;"></div>
+                        {% endif %}
+                        <h5 class="card-title">{{ artist.name }}</h5>
+                        <p class="card-text">Country: {{ artist.country }}</p>
+                        <p class="card-text">Genre: {{ artist.genre }}</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         {% endfor %}
     </div>
