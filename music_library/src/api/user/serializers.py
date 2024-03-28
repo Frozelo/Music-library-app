@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from src.api.library.serializers import TrackSerializer, TrackLikesSerializer
+from src.api.library.serializers import TrackSerializer, TrackLikesSerializer, AbstractLikeSerializer, \
+    ArtistLikesSerializer
 from src.user.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 
@@ -9,11 +10,12 @@ UserModel = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    liked_tracks = TrackLikesSerializer(many=True, source='trackuserrelationship_set')
+    liked_tracks = TrackLikesSerializer(many=True, source='track_user_relation')
+    liked_artists = ArtistLikesSerializer(many=True, source='artist_user_relation')
 
     class Meta:
         model = UserModel
-        fields = ['id', 'username', 'email', 'liked_tracks']
+        fields = ['id', 'username', 'email', 'liked_artists', 'liked_tracks']
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

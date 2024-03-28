@@ -18,7 +18,6 @@ class Artist(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True)
     itunes_id = models.IntegerField(unique=True, null=True, blank=True)
 
-
     def __str__(self):
         return self.name
 
@@ -56,9 +55,18 @@ class Track(models.Model):
 
 
 class TrackUserRelationship(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='track_user_relation')
     track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name='user', blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
 
     class Meta:
         unique_together = ('user', 'track')
+
+
+class ArtistUserRelationship(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='artist_user_relation')
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='user', blank=True, null=True)
+    created_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'artist')

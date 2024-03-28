@@ -11,7 +11,8 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from core.services import all_objects
 from .abstrack_api_views import AbstractLikeView
 from .serializers import DetailAlbumSerializer, ArtistSerializer, TrackSerializer
-from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, TrackUserRelationship
+from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, TrackUserRelationship, \
+    ArtistUserRelationship
 
 
 class AlbumListView(ReadOnlyModelViewSet):
@@ -55,3 +56,13 @@ class TrackLikeView(AbstractLikeView):
         track_id = self.kwargs.get('id', None)
         track = get_object_or_404(Track, pk=track_id)
         return self.set_like(user, track, TrackUserRelationship)
+
+
+class ArtistLikeView(AbstractLikeView):
+    like_type = 'artist'
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        artist_id = kwargs.get('id')
+        artist = get_object_or_404(Artist, pk=artist_id)
+        return self.set_like(user, artist, ArtistUserRelationship)

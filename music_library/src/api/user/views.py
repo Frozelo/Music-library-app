@@ -8,7 +8,9 @@ from src.user.models import CustomUser
 
 
 class UserViewSet(ModelViewSet):
-    queryset = CustomUser.objects.only('username', 'first_name', 'last_name', 'bio')
+    queryset = CustomUser.objects.prefetch_related(
+        'track_user_relation',
+        'artist_user_relation')
     serializer_class = UserSerializer
 
 

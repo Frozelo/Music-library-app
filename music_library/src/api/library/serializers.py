@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from core.services import filter_objects
-from src.api.library.core_serializers import SimpleAlbumSerializer
-from src.music_app.models import Album, Track, Artist, Genre, AlbumUserRelationship, TrackUserRelationship
+from src.api.library.core_serializers import SimpleAlbumSerializer, AbstractLikeSerializer
+from src.music_app.models import Album, Track, Artist, Genre, AlbumUserRelationship, TrackUserRelationship, \
+    ArtistUserRelationship
 
 
 class TrackSerializer(serializers.ModelSerializer):
@@ -15,17 +16,24 @@ class TrackSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'duration', 'artist', 'audio_file', 'cover_image', 'total_likes', ]
 
 
-class TrackLikesSerializer(serializers.ModelSerializer):
+class TrackLikesSerializer(AbstractLikeSerializer):
     """"A serializer for track likes"""
-    user = serializers.StringRelatedField()
 
-    class Meta:
+    class Meta(AbstractLikeSerializer.Meta):
         model = TrackUserRelationship
-        fields = ['id', 'user', 'created_at']
+        fields = AbstractLikeSerializer.Meta.fields
+
+
+class ArtistLikesSerializer(AbstractLikeSerializer):
+
+    class Meta(AbstractLikeSerializer.Meta):
+        model = ArtistUserRelationship
+        fields = AbstractLikeSerializer.Meta.fields
 
 
 class DetailAlbumSerializer(SimpleAlbumSerializer):
     """"A serializer for detail album view (artist, tracks)"""
+
     artist = serializers.StringRelatedField()
     tracks = TrackSerializer(many=True)
     total_likes = serializers.IntegerField(read_only=True)
@@ -37,6 +45,7 @@ class DetailAlbumSerializer(SimpleAlbumSerializer):
 
 class GenreSerializer(serializers.ModelSerializer):
     """"A seriazlizer for genres"""
+
     class Meta:
         model = Genre
         fields = ('id', 'name')
