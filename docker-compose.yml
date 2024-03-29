@@ -1,7 +1,7 @@
 services:
   web-app:
     build:
-      context: ../music-library
+      context: ../Music-library-app
     ports:
       - "8000:8000"
     volumes:
@@ -11,8 +11,10 @@ services:
       - DB_NAME=db_name
       - DB_USER=db_user
       - DB_PASS=pass
+      - REDIS_URL=redis://redis:6379/0
     depends_on:
       - database
+      - redis
 
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
@@ -23,3 +25,10 @@ services:
       - POSTGRES_DB=db_name
       - POSTGRES_USER=db_user
       - POSTGRES_PASSWORD=pass
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
