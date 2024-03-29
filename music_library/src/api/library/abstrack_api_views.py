@@ -1,26 +1,38 @@
+from django.db.models import Model
+from django.http import HttpRequest
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from src.user.models import CustomUser
+
 
 class AbstractLikeView(APIView):
+    model = None
+    relationship_model = None
     like_type = None
     permission_classes = [IsAuthenticated]
 
-    def set_like(self, user, obj, relationship_model):
-        like_instance, created = relationship_model.objects.get_or_create(user=user, **{self.like_type: obj})
+    def post(self, request: HttpRequest, *args, **kwargs):
+        user = request.user
+        object_id = kwargs.get('id')
+        obj = get_object_or_404(self.model, pk=object_id)
+        return self.set_like(user, obj)
+
+    def set_like(self, user: CustomUser, obj: Model):
+        like_instance, created = self.relationship_model.objects.get_or_create(
+            user=user,
+            **{self.like_type: obj}
+        )
 
         if created:
-            message = self.create_message(operation='added')
+            message = f'Like added to {self.like_type}'
             status_code = status.HTTP_201_CREATED
         else:
             like_instance.delete()
-            message = self.create_message(operation='deleted')
+            message = f'Like removed from {self.like_type}'
             status_code = status.HTTP_200_OK
 
         return Response({'message': message}, status=status_code)
-
-    def create_message(self, operation):
-        message = f'Like {operation} for {self.like_type}'
-        return message

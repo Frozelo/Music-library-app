@@ -1,4 +1,4 @@
-from core.services import all_objects
+from core.obj_services import all_objects
 from src.music_app.models import Artist, Album, Genre
 
 

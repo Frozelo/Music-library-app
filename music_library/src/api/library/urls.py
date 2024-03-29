@@ -6,7 +6,7 @@ from .views import ArtistListView, AlbumListView, TrackListView, AlbumLikeView, 
 
 urlpatterns = [
     path('albums/<int:id>/like/', AlbumLikeView.as_view(), name='album-like'),
-    path('artist/<int:id>/like/', ArtistLikeView.as_view(), name='artist-like'),
+    path('artists/<int:id>/like/', ArtistLikeView.as_view(), name='artist-like'),
     path('tracks/<int:id>/like/', TrackLikeView.as_view(), name='track-like'),
 
 ]

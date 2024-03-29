@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.services import filter_objects
+from core.obj_services import filter_objects
 from src.api.library.core_serializers import SimpleAlbumSerializer, AbstractLikeSerializer
 from src.music_app.models import Album, Track, Artist, Genre, AlbumUserRelationship, TrackUserRelationship, \
     ArtistUserRelationship
@@ -44,7 +44,7 @@ class DetailAlbumSerializer(SimpleAlbumSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    """"A seriazlizer for genres"""
+    """"A serializer for genres"""
 
     class Meta:
         model = Genre
@@ -52,7 +52,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-    """a serializer for artists"""
+    """A serializer for artists"""
     genre = GenreSerializer()
     albums = SimpleAlbumSerializer(many=True, read_only=True)
 
