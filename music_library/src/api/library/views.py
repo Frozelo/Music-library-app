@@ -1,6 +1,8 @@
 from django.db.models import Count, Prefetch
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +18,12 @@ from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, Tra
     ArtistUserRelationship
 
 
+class CacheMixin:
+    @method_decorator(cache_page(900))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
 class AlbumListView(ReadOnlyModelViewSet):
     queryset = (Album.objects.select_related('artist').prefetch_related('tracks__artist').
                 annotate(total_likes=Count('user')))
@@ -28,7 +36,7 @@ class AlbumListView(ReadOnlyModelViewSet):
         return self.queryset.order_by('release_year')
 
 
-class TrackListView(ReadOnlyModelViewSet):
+class TrackListView(CacheMixin, ReadOnlyModelViewSet):
     queryset = (Track.objects.prefetch_related('artist').
                 annotate(total_likes=Count('user')).
                 defer('album'))
