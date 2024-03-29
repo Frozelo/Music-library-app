@@ -103,8 +103,6 @@ CACHES = {
     }
 }
 
-
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
@@ -149,8 +147,8 @@ STATICFILES_DIRS = [
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
-       'SHOW_TOOLBAR_CALLBACK': lambda request: True,  # Forces the toolbar to show for testing
-   }
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,  # Forces the toolbar to show for testing
+}
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
