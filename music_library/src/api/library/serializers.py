@@ -25,7 +25,6 @@ class TrackLikesSerializer(AbstractLikeSerializer):
 
 
 class ArtistLikesSerializer(AbstractLikeSerializer):
-
     class Meta(AbstractLikeSerializer.Meta):
         model = ArtistUserRelationship
         fields = AbstractLikeSerializer.Meta.fields
@@ -61,7 +60,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'country', 'avatar_image', 'genre', 'albums']
 
     def to_representation(self, instance):
-        """"Sorting the given instance by release year"""
+        """Sorting albums by release date within the representation"""
         representation = super(ArtistSerializer, self).to_representation(instance)
-        representation['albums'] = SimpleAlbumSerializer(instance.albums.order_by('-release_year'), many=True).data
+
+        # Sorting albums by release year within the representation
+        sorted_albums = sorted(representation['albums'],
+                               key=lambda album: album['release_year'] if album['release_year'] else 0, reverse=True)
+        representation['albums'] = sorted_albums
         return representation

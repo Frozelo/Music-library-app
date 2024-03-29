@@ -1,18 +1,6 @@
 from django.db.models import Count, Prefetch
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-
 from core.caching import CacheMixin
-from core.obj_services import all_objects
-from core.request_services import get_params_from_kwargs
 from .abstrack_api_views import AbstractLikeView
 from .serializers import DetailAlbumSerializer, ArtistSerializer, TrackSerializer
 from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, TrackUserRelationship, \
@@ -23,11 +11,9 @@ class AlbumListView(CacheMixin, ReadOnlyModelViewSet):
     queryset = Album.objects.select_related('artist').prefetch_related('tracks__artist').annotate(
         total_likes=Count('user'))
     serializer_class = DetailAlbumSerializer
+    cache_prefix_key = 'album_view_cache_key'
 
     def get_queryset(self):
-        """
-        Возвращает отсортированный по дате выхода (самые новые сначала) список альбомов.
-        """
         return self.queryset.order_by('-release_year')
 
 
@@ -36,12 +22,13 @@ class TrackListView(CacheMixin, ReadOnlyModelViewSet):
                 annotate(total_likes=Count('user')).
                 defer('album'))
     serializer_class = TrackSerializer
+    cache_prefix_key = 'track_view_cache_key'
 
 
-# TODO fix the amount of queries
 class ArtistListView(CacheMixin, ReadOnlyModelViewSet):
     queryset = Artist.objects.select_related('genre').prefetch_related('albums')
     serializer_class = ArtistSerializer
+    cache_prefix_key = 'artist_view_cache_key'
 
 
 class AlbumLikeView(AbstractLikeView):

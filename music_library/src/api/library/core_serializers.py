@@ -20,3 +20,5 @@ class SimpleAlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = ['id', 'title', 'release_year', 'artist', 'biography', 'cover_image']
+
+
