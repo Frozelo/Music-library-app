@@ -1,3 +1,5 @@
+
+# TODO: Work with decorators, add some more decorators!
 def select_related_objects_decorator(func):
     def wrapper(obj, select_related=(), *args, **kwargs):
         return func(obj, *args, **kwargs).select_related(*select_related)

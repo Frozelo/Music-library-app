@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'src.music_app',
     'src.user',
     'src.scripts',
+    'src.reviews'
 ]
 AUTH_USER_MODEL = 'user.CustomUser'
 

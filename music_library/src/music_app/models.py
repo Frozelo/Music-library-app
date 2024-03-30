@@ -36,8 +36,6 @@ class Album(models.Model):
         return self.title
 
 
-
-
 class AlbumUserRelationship(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='user', blank=True, null=True)

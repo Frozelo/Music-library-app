@@ -7,6 +7,7 @@ from ...music_app.models import Album, Artist, Track, AlbumUserRelationship, Tra
     ArtistUserRelationship
 
 
+# TODO: Work with views (core functions using)
 class AlbumListView(CacheMixin, ReadOnlyModelViewSet):
     queryset = Album.objects.select_related('artist').prefetch_related('tracks__artist').annotate(
         total_likes=Count('user'))
